@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection.Metadata;
 using Animals;  // using the animals namespace, draw it into the program
 using System.Collections;
@@ -6,7 +6,7 @@ using System.Collections;
 // C# has a unified type system in which all types ultimately share a common base type. This means that all types, whether they represent
 // business objects or are primitive types such as numbers, share the same basic functionality. For example, an instance of any type can be converted to a string by calling its ToString method.
 // C# has interfaces which are similar to classes but they cannot hold data, they only define behaviour and can be multiple inherited
-// C# is typesafe and statically typed, like C++ and unlike Python, strongly types, no type conversions unless explicit
+// C# is typesafe and statically typed, like C++ and unlike Python, strongly typed, no type conversions unless explicit
 
 /* C# relies on the runtime to perform automatic memory management. The Com‐
 mon Language Runtime has a garbage collector that executes as part of your
@@ -129,7 +129,7 @@ System.Int32 i = 5;
 
 Division operations on integral types always eliminate the remainder (round toward zero).
 
-At runtime, arithmetic operations on integral types can overflow. By default, this happens silently—no exception is thrown
+At runtime, arithmetic operations on integral types can overflow. By default, this happens silently — no exception is thrown
 
 static bool UseUmbrella (bool rainy, bool sunny, bool windy)
 {
@@ -274,7 +274,7 @@ static class Program
         // you can also combine ranges and indices
 
         // rectangular arrays are declared using commas to seperate each dimension
-        int[,] matrix = new int[3, 3]; // rectangular 3x3 matrix 2d array
+     /*   int[,] matrix = new int[3, 3]; // rectangular 3x3 matrix 2d array
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
             for (int j = 0; j < matrix.GetLength(1); j++)
@@ -282,24 +282,24 @@ static class Program
                 matrix[i, j] = i * 3 + j;
             }
         }
-        Console.WriteLine(matrix);
+        Console.WriteLine(matrix);*/
 
         // Jagged arrays are declared using successive square brackets to represent each dimension.
 
         int[][] ints = new int[3][];
         // The inner dimensions aren’t specified in the declaration because, unlike a rectangular array, each inner array can be an arbitrary length.Each inner array is implicitly
         // initialized to null rather than an empty array.You must manually create each inner array
-
-        for (int i = 0;i < ints.GetLength(0); i++)
+/*
+        for (int i = 0; i < ints.GetLength(0); i++)
         {
             ints[i] = new int[3]; // create an inner array
-            for (int j = 0;j < ints[i].Length; j++)
+            for (int j = 0; j < ints[i].Length; j++)
             {
                 ints[i][j] = i * 3 + j;
             }
         }
 
-        Console.WriteLine(ints);
+        Console.WriteLine(ints);*/
 
         /* simplified array declerations:
     char[] vowels = {'a','e','i','o','u'};
@@ -342,7 +342,7 @@ static class Program
         // Function arguments must be supplied unless optional and all other variables such as fields nd array elements are automatically initialised by the runtime
 
         int u;
-        Console.WriteLine(u); // not allowed, compile time error
+     //   Console.WriteLine(u); // not allowed, compile time error
 
         /* Fields and array elements are automatically initialized with the default values for
            their type. The following code outputs 0 because array elements are implicitly
@@ -356,11 +356,106 @@ static class Program
 
            class Test { public static int X; } // field 
         
-         
+         By default, arguments in C# are pased by value, which is passing a copy of the value to the passed method
+
          
          */
+        
+        static void Foo(int i)
+        {
+            i = i + 1;
+        }
+        int _x = 8;
+        Foo(_x);
+        Console.WriteLine(_x);  // still 8 as a copy of _x is passed to the Foo function
+
+        // Passing a reference-type argument by value copies the reference but not the object
+
+        // to pass by refrence, C# provides the ref parameter modifier
+
+        static void ref_Foo(ref int i)
+        {
+            i += 10;
+        }
+
+        ref_Foo(ref _x); // call with the ref keyword
+        Console.WriteLine(_x);  // now the value at the memory address _x has changed
+
+        // a parameter can be passed by reference or by value, regardless of whether the parameter type is a reference type or a value type.
+
+/*An out argument is like a ref argument except for the following:
+• It need not be assigned before going into the function.
+• It must be assigned before it comes out of the function.
+The out modifier is most commonly used to get multiple return values back from a
+method; for example: */
+
+        static void bar(out int y)
+        {
+            y = 1;
+        }
+
+        bar(out _x); // _x value is now 1
+
+        Console.WriteLine(_x);
+
+        // When you pass an argument by reference, you alias the storage location of an existing variable rather than create a new storage location.
+        // the out parameter is passed by reference
+
+/* An in parameter is similar to a ref parameter except that the argument’s value
+    cannot be modified by the method (doing so generates a compile-time error). This
+    modifier is most useful when passing a large value type to the method because it
+    allows the compiler to avoid the overhead of copying the argument prior to passing
+    it in while still protecting the original value from modification.
+
+    Overloading solely on the presence of in is permitted:
+    void Foo ( SomeBigStruct a) { ... }
+    void Foo (in SomeBigStruct a) { ... }
+
+    To call the second overload, the caller must use the in modifier:
+    SomeBigStruct x = ...;
+    Foo (x); // Calls the first overload
+    Foo (in x); // Calls the second overload
+
+    When there’s no ambiguity,
+    void Bar (in SomeBigStruct a) { ... }
+    use of the in modifier is optional for the caller:
+    Bar (x); // OK (calls the 'in' overload)
+    Bar (in x); // OK (calls the 'in' overload)  */
 
 
+      // C# allows named arguments
+        void Func(int x, int y, int z = 0)  // importantly, z is an optional argument because we assign to it, we don't need to pass it in for the function to still execute
+        {
+            Console.WriteLine(x); Console.WriteLine(y);
+        }
+
+        Func(x: 5, y: 10);  // named args
+
+        // you can also mix and match positional and named args like with Python
+
+        // The ?? operator is the null-coalescing operator. It says, “If the operand to the left is non - null, give it to me; otherwise, give me another value.” For example:
+        string s1 = null;
+        string s2 = s1 ?? "nothing"; // s2 evaluates to "nothing"
+
+        /*  The ?. operator is the null-conditional or “Elvis” operator (after the Elvis emoticon).
+        It allows you to call methods and access members just like the standard dot operator
+        except that if the operand on the left is null, the expression evaluates to null instead
+        of throwing a NullReferenceException:
+        System.Text.StringBuilder sb = null;
+        string s = sb?.ToString(); // No error; s instead evaluates to null  */
+
+        // C# allows A variable’s scope extends in both directions throughout its code block, unlike c++
+
+        // C# uses else if, not elif
+        // C# also includes the switch statement
+        // you can switch on a type aswell as a value
+        // C# also has switch expressions
+
+        // The foreach statement iterates over each element in an enumerable object. Most of the.NET types that represent a set or list of elements are enumerable. For example, both an array and a string are enumerable.
+        foreach (char c in s)
+        {
+            Console.WriteLine(c); 
+        }
     }
 
 
