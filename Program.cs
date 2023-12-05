@@ -456,6 +456,22 @@ method; for example: */
         {
             Console.WriteLine(c); 
         }
+     
+        // C# jump statements are break, continue, return, throw and goto
+        // all same as C++ except goto
+
+        int p = 1;
+        startloop:  // label
+        if (i <= 5)
+        {
+            Console.WriteLine(i + " ");
+            i++;
+            goto startloop;  // goto is used to switch execution to a label
+        }
+
+        // Names declared in outer namespaces can be used unqualified within inner namespaces.
+        // using keyword allows us to alias namespaces
+        // names in inner namespaces hide names in outer namespaces
     }
 
 
