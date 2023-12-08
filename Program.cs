@@ -342,7 +342,7 @@ static class Program
         // Function arguments must be supplied unless optional and all other variables such as fields nd array elements are automatically initialised by the runtime
 
         int u;
-     //   Console.WriteLine(u); // not allowed, compile time error
+        //   Console.WriteLine(u); // not allowed, compile time error
 
         /* Fields and array elements are automatically initialized with the default values for
            their type. The following code outputs 0 because array elements are implicitly
@@ -358,9 +358,11 @@ static class Program
         
          By default, arguments in C# are pased by value, which is passing a copy of the value to the passed method
 
-         
+         Data members and function members that don’t operate on the instance of the type
+can be marked as static. To refer to a static member from outside its type, you
+specify its type name rather than an instance. A
          */
-        
+
         static void Foo(int i)
         {
             i = i + 1;
@@ -456,7 +458,7 @@ method; for example: */
         {
             Console.WriteLine(c); 
         }
-     
+
         // C# jump statements are break, continue, return, throw and goto
         // all same as C++ except goto
 
