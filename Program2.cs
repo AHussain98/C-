@@ -1,5 +1,10 @@
 using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+
+
+
 // a class is the most common kind of reference type
 // A constant is evaluated statically at compile time, and the compiler literally substitutes its value whenever used (rather like a macro in C++).
 // A constant can be bool, char, string, any of the built-in numeric types, or an enum type.
@@ -215,12 +220,100 @@ public class SubClass :  BaseClass
 // object is a reference type, by virtue of being a class. Despite this, value types, such as int, can also be cast to and from object
 // C# programs are type-checked both statically (at compile time) and at runtime (by the CLR).
 
+// A struct is a value type, whereas a class is a reference type.
+// A struct does not support inheritance (other than implicitly deriving from object, or more precisely, System.ValueType).
+
+// Because a struct is a value type, each instance does not require instantiation of an object on the heap; this results in useful savings when creating many instances of a type.
+// For instance, creating an array of value type elements requires only a single heap allocation.
+
+// since structs are value types, we need to assign every field in the constructor
+
+
+readonly struct example_struct {  // readonly struct, must have readonly 
+   readonly public int x;
+    readonly public int y;
+
+    public example_struct(int a, int b)
+    {
+        x = a;
+        y = b;
+    }
+
+}
+
+// If you need to apply readonly at a more granular level, you can apply the readonly modifier(from C# 8) to a struct’s functions.
+// This ensures that if the function attempts to modify any field, a compile - time error is generated
+
+// access modifiers
+/* To promote encapsulation, a type or type member can limit its accessibility to other
+types and other assemblies by adding one of five access modifiers to the declaration:
+
+public: Fully accessible. This is the implicit accessibility for members of an enum or interface.
+
+internal: Accessible only within the containing assembly or friend assemblies. This is the default accessibility for non-nested types.
+
+private: Accessible only within the containing type. This is the default accessibility for members of a class or struct.
+
+protected: Accessible only within the containing type or subclasses.
+
+protected internal: The union of protected and internal accessibility. A member that is protected internal is accessible in two ways.
+
+private protected (from C# 7.2) : The intersection of protected and internal accessibility. A member that is private protected is accessible only within the containing type, or subclasses
+that reside in the same assembly (making it less accessible than protected or internal alone).
+*/
+
+// interfaces are similar to clases, but they only define functions, not fields
+// a class or struct can implement multiple interfaces, but only one class. (structs cannot inherit at all)
+
+public interface iEnumerator {  // interfaces are public implicitly and only define functions
+
+    bool MoveNext();
+    object Current { get; }
+    void Reset();
+
+}  // the class that inherits this interface will define these functions
+
+
+// an enum is a special value type that lets you specify a group of named numeric constants
+
+public enum borderside { left, right, top = 20, bottom }  // each enum member by default is an underlying integral type, these start at 0 but can be given specific values
+// we can cast an enum to its integral type 
+
+// nested types are declared within the scope of another type
+
+public class TopLevel
+{
+    public class Nested { }  // nested class
+
+}
+
+// C# generics are similar to C++ templates
+// Generics exist to stop us from rewriting code
+// only declerations of  classes, structs, interfaces, delegates and methods can introduce a generic type parameter
+// By default, you can substitute a type parameter with any type whatsoever. Constraints can be applied to a type parameter to require more specific type arguments.
 
 
 
 
 
-static class Program {
+
+
+
+    static class Program {
+
+    static T Max<T>(T a, T b) where T : IComparable<T>  // this is a generic restriction, IComparable is a generic interface in the System namespace
+    {
+        return a.CompareTo(b) > 0 ? a : b;  // generic method, CompareTo returns a positive number if this is greater than other. 
+    }
+    /* Why couldn’t we have implemented it like this?
+       static T Max <T> (T a, T b) => (a > b ? a : b); // Compile error
+       The reason is that Max needs to be compiled once and work for all possible values of T. 
+       Compilation cannot succeed because there is no single meaning for > across all values of T—in fact, not every T even has a > operator 
+       This works in C++, not in C#
+       In C#, the synthesis between the producer and the consumer that produces closed types doesn’t actually happen until runtime. With C++ templates, this synthesis is performed at compile
+       time. This means that in C++ you don’t deploy template libraries as .dlls—they exist only as source code.
+    */
+
     static void Main() 
     {
         Test t1 = new Test();
@@ -282,7 +375,8 @@ static class Program {
 
         Console.WriteLine(h.ToString());  // prints house
 
-
+        Console.WriteLine(Max(5, 10));
 }
  
 }
+
