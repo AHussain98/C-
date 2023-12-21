@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
@@ -23,7 +23,14 @@ public class example  // we can't have free functions in C#, they must be part o
         }
     }
 }
-/* If you call a method, you might get back a type that is more specific than what you
+/* 
+ * C# is statically typed and strongly typed
+ * Strongly typed means that there are restrictions between conversions between types. Strong typing means that variables do have a type and that the type matters when performing operations on a variable. 
+ * Statically typed means that the types are not dynamic - you can not change the type of a variable once it has been created. (unless using the dynamic keyword)
+ * 
+ * 
+ * 
+ * If you call a method, you might get back a type that is more specific than what you
 asked for. This is ordinary polymorphic behavior. For the same reason, a delegate’s
 target method might return a more specific type than described by the delegate.
 This is called covariance:
@@ -307,6 +314,53 @@ class foo { }
 // attributes can also have parameters, and you can specify multiple attributes at a time
 
 
+// Dynamic binding defers binding - the proces of resolving types, members and operators- from compile time to runtime.
+// Dynamic binding is useful when at compile time, you know that a certain function, member or operation exists but the compiler does not
+
+/*
+ A dynamic type is like object—it’s equally nondescriptive about a type. The dif‐
+ference is that it lets you use it in ways that aren’t known at compile time. A
+dynamic object binds at runtime based on its runtime type, not its compile-time
+type. When the compiler sees a dynamically bound expression (which in general is
+an expression that contains any value of type dynamic), it merely packages up the
+expression such that the binding can be done later at runtime.
+ 
+ 
+ * The var and dynamic types bear a superficial resemblance, but the difference is
+deep:
+• var says, “Let the compiler figure out the type.”
+• dynamic says, “Let the runtime figure out the type.”
+To illustrate:
+dynamic x = "hello"; // Static type is dynamic; runtime type is string
+var y = "hello"; // Static type is string; runtime type is string
+int i = x; // Runtime error (cannot convert string to int)
+int j = y; // Compile-time error (cannot convert string to int)
+The static type of a variable declared with var can be dynamic:
+dynamic x = "hello";
+var y = x; // Static type of y is dynamic
+int z = y; // Runtime error (cannot convert string to int)
+
+
+c# also supports operator ovrloading. These methods must be markd static and public for the type
+This is static typing:
+
+string foo = "bar";
+foo is now a string, so this will cause a compile time error:
+
+foo = 1;
+Even if you use var, it's still statically typed:
+
+var foo = "bar";     // foo is now a string
+foo = 1;             // still a compile time error
+Using the dynamic keyword, means the type won't be static and can be changed, so now you can do this:
+
+dynamic foo = "bar";   
+foo = 1;              // this is now fine.
+
+
+
+we can use pointers, dereference pointers and use references by using keywords like * & and -> in C# but only in blocks markd unsafe
+*/
 
 static class Program
 {
@@ -414,9 +468,15 @@ static class Program
 
         // we can also use the and, or or not keywords to combine patterns
 
-        
+        dynamic d = "hello";  // this is a statically typed string with a dynamic runtime type
+        d = 1; // this will still work because d is dynamic, its type is not resolved until runtime
 
+        // string _s = "yo!";  // throws an error, not dynamic
+        // _s = 12;
+        // this binding is done by the compiler, static binding and therefore the runtime (dynamic) type of _s is also s string, therefore exception thrown
+        // the dynamic keyword tells the compiler to relax, and that d has a dynamic runtime type, which means it will be resolved at aruntime
     
     
     }
+
 }
