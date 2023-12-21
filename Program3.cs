@@ -359,8 +359,76 @@ foo = 1;              // this is now fine.
 
 
 
-we can use pointers, dereference pointers and use references by using keywords like * & and -> in C# but only in blocks markd unsafe
+we can use pointers, dereference pointers and use references by using keywords like * & and -> in C# but only in blocks marked unsafe
 */
+/*
+ 
+Inversion of control allows the flow of control of a program to move from a 'main' function to a framework
+Dependency injection is a subset of the inversion of control principle. In other words, dependency injection is just one way of implementing inversion of control. 
+You can also implement inversion of control using events, delegates, template pattern, factory method, or service locator, for example.
+
+
+
+
+ 
+*/
+// example of dependency injection and inversion of control
+
+public interface ILogger {  // this interface will be implemented by the concrete classes
+    void Log (string message);
+
+}
+
+public class FileLogger : ILogger  
+{
+    public void Log (string message)
+    {
+        Console.WriteLine ("Inside log method of FileLogger");
+        LogToFile(message);
+    }
+
+    public void LogToFile (string message)
+    {
+        Console.WriteLine("Log to file : " + message);
+    }
+}
+
+public class DatabaseLogger : ILogger { 
+
+    public void Log (string message)
+    {
+        Console.WriteLine("Inside log method of DatabaseLogger");
+        LogToDatabase(message);
+    }
+
+    public void LogToDatabase (string message)
+    {
+        Console.WriteLine("Log to Database : " + message);
+    }
+ 
+}
+
+// we can now use dependency injection to pass an instance of a concrete logger class using contructor injection
+
+public class ProductService
+{
+    private readonly ILogger _logger;
+    public ProductService (ILogger logger)
+    {
+        _logger = logger;
+    }
+    public void Log (string message)
+    {
+        _logger.Log (message);
+    }
+}
+// The ProductService class is not responsible for creating an instance of an implementation of the ILogger interface or even deciding which implementation of the ILogger interface should be used.
+
+
+
+
+
+
 
 static class Program
 {
@@ -474,9 +542,16 @@ static class Program
         // string _s = "yo!";  // throws an error, not dynamic
         // _s = 12;
         // this binding is done by the compiler, static binding and therefore the runtime (dynamic) type of _s is also s string, therefore exception thrown
-        // the dynamic keyword tells the compiler to relax, and that d has a dynamic runtime type, which means it will be resolved at aruntime
+        // the dynamic keyword tells the compiler to relax, and that d has a dynamic runtime type, which means it will be resolved at runtime
+
+
+        ILogger logger = new FileLogger();
+        ProductService productService = new ProductService(logger);  // pass in the Ilogger object, this means the product service doesn't control it, as its implemented in the Main method()
+        // we have passed in the dependency
+        productService.Log("Hi there!");
+
     
     
     }
-
 }
+
